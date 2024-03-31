@@ -15,8 +15,34 @@
         </div>
 
         <div class="informacao-pagina">
-            <div style="width: 30%; margin-left: auto; margin-right: auto">
-                --- Listar ---
+            <div style="width: 90%; margin-left: auto; margin-right: auto">
+                <table border="1" width="100%" class="table table-striped table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Site</th>
+                        <th>UF</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($fornecedores as $fornecedor)
+                        <tr>
+                            <td>{{ $fornecedor->id }}</td>
+                            <td>{{ $fornecedor->nome }}</td>
+                            <td>{{ $fornecedor->site }}</td>
+                            <td>{{ $fornecedor->uf }}</td>
+                            <td>{{ $fornecedor->email }}</td>
+                            <td>
+                                <a href="{{ route('app.fornecedor.editar', ['id' => $fornecedor->id]) }}">Editar</a>
+                                {{-- <a href="{{ route('app.fornecedor.excluir', ['id' => $fornecedor->id]) }}">Excluir</a> --}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                </table>
             </div>
         </div>
     </div>
