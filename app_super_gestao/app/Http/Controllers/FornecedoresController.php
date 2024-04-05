@@ -20,9 +20,9 @@ class FornecedoresController extends Controller
             ->where('site', 'like', '%' . $request->input('site') . '%')
             ->where('uf', 'like', '%' . $request->input('uf') . '%')
             ->where('email', 'like', '%' . $request->input('email') . '%')
-            ->get();
+            ->paginate(2);
 
-        return view('app.fornecedor.listar', ['fornecedores' => $fornecedores]);
+        return view('app.fornecedor.listar', ['fornecedores' => $fornecedores, 'request' => $request->all()]);
     }
 
     //Método adicionar que irá efetuar a criação do fornecedor através do create
@@ -97,5 +97,13 @@ class FornecedoresController extends Controller
         $fornecedor = Fornecedor::find($id);
 
         return view('app.fornecedor.adicionar', ['fornecedor' => $fornecedor, 'msg' => $msg]);
+    }
+
+    //Criar método excluir para exclusão dos dados do formulário de Fornecedor
+    public function excluir($id)
+    {
+        $fornecedor = Fornecedor::find($id);
+        $fornecedor->delete();
+        return redirect()->route('app.fornecedor');
     }
 }

@@ -37,12 +37,13 @@
                             <td>{{ $fornecedor->email }}</td>
                             <td>
                                 <a href="{{ route('app.fornecedor.editar', ['id' => $fornecedor->id]) }}">Editar</a>
-                                {{-- <a href="{{ route('app.fornecedor.excluir', ['id' => $fornecedor->id]) }}">Excluir</a> --}}
+                                <a href="{{ route('app.fornecedor.excluir', ['id' => $fornecedor->id]) }}">Excluir</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
                 </table>
+                {{ $fornecedores->appends($request)->links() }}
             </div>
         </div>
     </div>
