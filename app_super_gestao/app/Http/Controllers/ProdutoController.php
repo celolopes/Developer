@@ -35,7 +35,33 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Criar os arrays de validações para Produto com $regras e $feedback
+        $regras = [
+            'nome' => 'required|min:3|max:40', //nome com no mínimo 3 caracteres e no máximo 40
+            'descricao' => 'required|min:3|max:2000',
+            'peso' => 'required|integer',
+            'unidade_id' => 'exists:unidades,id',
+        ];
+
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório',
+            'nome.min' => 'O campo nome deve conter no mínimo 3 caracteres',
+            'nome.max' => 'O campo nome deve conter no máximo 40 caracteres',
+            'descricao.min' => 'O campo nome deve conter no mínimo 3 caracteres',
+            'descricao.max' => 'O campo nome deve conter no máximo 2000 caracteres',
+            'peso.integer' => 'O campo peso deve ser um número interiro',
+            'unidade_id.exists' => 'A unidade de medida informada não existe'
+        ];
+
+        //validar os dados
+        $request->validate($regras, $feedback);
+
+        $produto = new Produto();
+        $produto->create($request->all());
+
+        $msg = 'Produto cadastrado com sucesso!';
+
+        return redirect()->route('produto.index', ['id' => $produto->id])->with('msg', $msg);
     }
 
     /**
@@ -43,7 +69,8 @@ class ProdutoController extends Controller
      */
     public function show(Produto $produto)
     {
-        //
+        //Criar método show
+        return view('app.produto.show', ['produto' => $produto]);
     }
 
     /**
@@ -51,7 +78,10 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        //
+        //Criar método edit
+        $unidades = Unidade::all();
+
+        return view('app.produto.edit', ['produto' => $produto, 'unidades' => $unidades]);
     }
 
     /**
@@ -59,7 +89,30 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
-        //
+        //Criar método update
+        $regras = [
+            'nome' => 'required|min:3|max:40', //nome com no mínimo 3 caracteres e no máximo 40
+            'descricao' => 'required|min:3|max:2000',
+            'peso' => 'required|integer',
+            'unidade_id' => 'exists:unidades,id',
+        ];
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatório',
+            'nome.min' => 'O campo nome deve conter no mínimo 3 caracteres',
+            'nome.max' => 'O campo nome deve conter no máximo 40 caracteres',
+            'descricao.min' => 'O campo nome deve conter no mínimo 3 caracteres',
+            'descricao.max' => 'O campo nome deve conter no máximo 2000 caracteres',
+            'peso.integer' => 'O campo peso deve ser um número inteiro',
+            'unidade_id.exists' => 'A unidade de medida informada não existe'
+        ];
+        //validar os dados
+        $request->validate($regras, $feedback);
+
+        $produto->update($request->all());
+
+        $msg = 'Produto atualizado com sucesso!';
+
+        return redirect()->route('produto.show', ['produto' => $produto->id])->with('msg', $msg);
     }
 
     /**
