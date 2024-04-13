@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\ProdutoDetalheController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,9 @@ Route::middleware('autenticacao:padrao')->prefix('/app')->group(function () {
 
     //Criar a rota resources de ProdutoController
     Route::resource('produto', ProdutoController::class);
+
+    //Criar a rota resources de ProdutoDetalheController
+    Route::resource('produto-detalhe', ProdutoDetalheController::class);
 });
 
 Route::get('/teste/{p1}/{p2}', [\App\Http\Controllers\TesteController::class, 'teste'])->name('teste');

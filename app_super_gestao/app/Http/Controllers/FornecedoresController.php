@@ -56,7 +56,7 @@ class FornecedoresController extends Controller
             $msg = 'Fornecedor cadastrado com sucesso!';
         }
         //Condição de edição do Fornecedor
-        if ($fornecedor->input('_token') != '' && $fornecedor->input('id') != '') {
+        if ($request->input('_token') != '' && $request->input('id') != '') {
             $regras = [
                 'nome' => 'required|min:3|max:40', //nome com no mínimo 3 caracteres e no máximo 40
                 'site' => 'required',
