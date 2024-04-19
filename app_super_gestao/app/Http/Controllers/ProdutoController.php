@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fornecedor;
 use App\Models\Produto;
+use App\Models\Item;
 use App\Models\Unidade;
 use App\Models\ProdutoDetalhe;
 use Illuminate\Http\Request;
@@ -15,17 +17,7 @@ class ProdutoController extends Controller
     public function index(Request $request)
     {
         //Criar método index de produto
-        $produtos = Produto::paginate(10);
-
-        /* foreach ($produtos as $key => $produto) {
-            $produtoDetalhe = ProdutoDetalhe::where('produto_id', $produto->id)->first();
-
-            if (isset($produtoDetalhe)) {
-                $produtos[$key]['comprimento'] = $produtoDetalhe->comprimento;
-                $produtos[$key]['largura'] = $produtoDetalhe->largura;
-                $produtos[$key]['altura'] = $produtoDetalhe->altura;
-            }
-        } */
+        $produtos = Item::with(['produtoDetalhe', 'fornecedor'])->paginate(10);
 
         return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all()]);
     }
@@ -37,8 +29,9 @@ class ProdutoController extends Controller
     {
         //Criar a variável $unidades para receber os dados através do Model
         $unidades = Unidade::all();
+        $fornecedores = Fornecedor::all();
         //Criar método create de produto
-        return view('app.produto.create', ['unidades' => $unidades]);
+        return view('app.produto.create', ['unidades' => $unidades, 'fornecedores' => $fornecedores]);
     }
 
     /**
@@ -52,6 +45,7 @@ class ProdutoController extends Controller
             'descricao' => 'required|min:3|max:2000',
             'peso' => 'required|integer',
             'unidade_id' => 'exists:unidades,id',
+            'fornecedor_id' => 'exists:fornecedores,id'
         ];
 
         $feedback = [
@@ -61,13 +55,14 @@ class ProdutoController extends Controller
             'descricao.min' => 'O campo nome deve conter no mínimo 3 caracteres',
             'descricao.max' => 'O campo nome deve conter no máximo 2000 caracteres',
             'peso.integer' => 'O campo peso deve ser um número interiro',
-            'unidade_id.exists' => 'A unidade de medida informada não existe'
+            'unidade_id.exists' => 'A unidade de medida informada não existe',
+            'fornecedor_id.exists' => 'O fornecedor informado não existe'
         ];
 
         //validar os dados
         $request->validate($regras, $feedback);
 
-        $produto = new Produto();
+        $produto = new Item();
         $produto->create($request->all());
 
         $msg = 'Produto cadastrado com sucesso!';
@@ -91,15 +86,16 @@ class ProdutoController extends Controller
     {
         //Criar método edit
         $unidades = Unidade::all();
+        $fornecedores = Fornecedor::all();
 
-        return view('app.produto.edit', ['produto' => $produto, 'unidades' => $unidades]);
+        return view('app.produto.edit', ['produto' => $produto, 'unidades' => $unidades, 'fornecedores' => $fornecedores]);
         //return view('app.produto.create', ['produto' => $produto, 'unidades' => $unidades]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Produto $produto)
+    public function update(Request $request, Item $produto)
     {
         //Criar método update
         $regras = [
@@ -107,6 +103,7 @@ class ProdutoController extends Controller
             'descricao' => 'required|min:3|max:2000',
             'peso' => 'required|integer',
             'unidade_id' => 'exists:unidades,id',
+            'fornecedor_id' => 'exists:fornecedores,id'
         ];
         $feedback = [
             'required' => 'O campo :attribute é obrigatório',
@@ -115,7 +112,8 @@ class ProdutoController extends Controller
             'descricao.min' => 'O campo nome deve conter no mínimo 3 caracteres',
             'descricao.max' => 'O campo nome deve conter no máximo 2000 caracteres',
             'peso.integer' => 'O campo peso deve ser um número inteiro',
-            'unidade_id.exists' => 'A unidade de medida informada não existe'
+            'unidade_id.exists' => 'A unidade de medida informada não existe',
+            'fornecedor_id.exists' => 'O fornecedor informado não existe'
         ];
         //validar os dados
         $request->validate($regras, $feedback);

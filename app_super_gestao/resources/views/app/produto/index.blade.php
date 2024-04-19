@@ -22,6 +22,7 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Descrição</th>
+                        <th>Fornecedor</th>
                         <th>Peso</th>
                         <th>Comprimento</th>
                         <th>Altura</th>
@@ -37,6 +38,7 @@
                             <td>{{ $produto->id }}</td>
                             <td>{{ $produto->nome }}</td>
                             <td>{{ $produto->descricao }}</td>
+                            <td>{{ $produto->fornecedor->nome }}</td>
                             <td>{{ $produto->peso }}</td>
                             <td>{{ $produto->produtoDetalhe->comprimento ?? '' }}</td>
                             <td>{{ $produto->produtoDetalhe->altura ?? ''}}</td>
