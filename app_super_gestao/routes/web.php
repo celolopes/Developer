@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\ProdutoDetalheController;
+use App\Http\Controllers\PedidoProdutoController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PedidoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +35,6 @@ Route::post('/login', [\App\Http\Controllers\LoginController::class, 'autenticar
 Route::middleware('autenticacao:padrao')->prefix('/app')->group(function () {
     Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('app.home');
     Route::get('/sair', [\App\Http\Controllers\LoginController::class, 'sair'])->name('app.sair');
-    Route::get('/cliente', [\App\Http\Controllers\ClienteController::class, 'index'])->name('app.cliente');
 
     Route::get('/fornecedor', [\App\Http\Controllers\FornecedoresController::class, 'index'])->name('app.fornecedor');
     Route::post('/fornecedor/listar', [\App\Http\Controllers\FornecedoresController::class, 'listar'])->name('app.fornecedor.listar');
@@ -47,6 +49,15 @@ Route::middleware('autenticacao:padrao')->prefix('/app')->group(function () {
 
     //Criar a rota resources de ProdutoDetalheController
     Route::resource('produto-detalhe', ProdutoDetalheController::class);
+
+    //Criar a rota resources de ClienteController
+    Route::resource('cliente', ClienteController::class);
+
+    //Criar a rota resources de PedidoController
+    Route::resource('pedido', PedidoController::class);
+
+    //Criar a rota resources de PedidoProdutoController
+    Route::resource('pedido-produto', PedidoProdutoController::class);
 });
 
 Route::get('/teste/{p1}/{p2}', [\App\Http\Controllers\TesteController::class, 'teste'])->name('teste');
