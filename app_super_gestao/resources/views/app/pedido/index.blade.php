@@ -19,16 +19,17 @@
                 <table border="1" width="100%" class="table table-striped table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>ID Pedido</th>
                         <th>Cliente</th>
-                        <th colspan=3>Ações</th>
+                        <th colspan=4>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($pedidos as $pedido)
                         <tr>
                             <td>{{ $pedido->id }}</td>
-                            <td>{{ $pedido->id_cliente }}</td>
+                            <td>{{ $pedido->cliente_id }}</td>
+                            <td><a href="{{ route('pedido-produto.create', ['pedido' => $pedido->id])}}">Adicionar Produtos</a></td>
                             <td><a href="{{ route('pedido.show', ['pedido' => $pedido->id]) }}">Visualizar</a></td>
                             <td>
                                 <a href="{{ route('pedido.edit', ['pedido' => $pedido->id]) }}">Editar</a>
