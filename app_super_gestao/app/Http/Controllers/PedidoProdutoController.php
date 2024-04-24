@@ -36,14 +36,24 @@ class PedidoProdutoController extends Controller
         //Criar a função store de Pedido Produto
         $request->validate([
             'produto_id' => 'exists:produtos,id',
+            'quantidade' => 'required|numeric|min:1',
         ], [
             'produto_id.exists' => 'O Produto informado não existe',
+            'quantidade.required' => 'O campo quantidade deve ser preenchido',
+            'quantidade.numeric' => 'O campo quantidade deve ser um número',
+            'quantidade.min' => 'O campo quantidade deve ser maior que 0',
         ]);
 
-        $pedidoProduto = new PedidoProduto();
+        /* $pedidoProduto = new PedidoProduto();
         $pedidoProduto->pedido_id = $pedido->id;
         $pedidoProduto->produto_id = $request->get('produto_id');
-        $pedidoProduto->save();
+        $pedidoProduto->quantidade = $request->get('quantidade');
+        $pedidoProduto->save(); */
+
+        $pedido->produtos()->attach(
+            $request->get('produto_id'),
+            ['quantidade' => $request->get('quantidade')]
+        );
 
         return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
     }
@@ -75,8 +85,16 @@ class PedidoProdutoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PedidoProduto $pedidoProduto, $pedido_id)
     {
-        //
+        //Criar função destroy
+        /* $pedidoProduto = PedidoProduto::find($pedido->id, $produto->id);
+        $pedidoProduto->delete();
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedidoProduto->pedido_id]); */
+
+        //Criar função destroy pelo detach
+        //$pedidoProduto->produtos()->detach($pedidoProduto->pivot->id);
+        $pedidoProduto->delete();
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido_id]);
     }
 }

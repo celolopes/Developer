@@ -29,7 +29,7 @@
                         <th>Largura</th>
                         <th>Unidade ID</th>
                         <th>Visualizar</th>
-                        <th>Ações</th>
+                        <th colspan="2">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +55,16 @@
                                     {{-- <button type="submit">Excluir</button>     --}}
                                     <a href="#" onclick="document.getElementById('form_{{$produto->id}}').submit()" >Excluir</a>
                                 </form>    
+                            </td>
+                        </tr>
+                        <tr> 
+                            <td colspan="12">
+                                <p>Pedidos</p>
+                                @foreach ($produto->pedidos as $pedido)
+                                    <a href="{{ route('pedido-produto.create', ['pedido' => $pedido->id]) }}">
+                                        Pedido: {{$pedido->id}},
+                                    </a>
+                                @endforeach
                             </td>
                         </tr>
                     @endforeach
