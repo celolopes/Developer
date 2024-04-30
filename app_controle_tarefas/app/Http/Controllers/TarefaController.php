@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NovaTarefaMail;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TarefaController extends Controller
 {
@@ -18,10 +20,11 @@ class TarefaController extends Controller
      */
     public function index()
     {
+        $user_id = auth()->user()->id;
+        $tarefas = Tarefa::where('user_id', $user_id)->paginate(10);
         //Verificar se o usuário está autenticado
         if (auth()->check()) {
-            //$tarefas = Tarefa::all();
-            return 'Você está logado no Sistema';
+            return view('tarefa.index', ['tarefas' => $tarefas]);
         } else {
             return redirect()->route('login');
         }
@@ -34,7 +37,8 @@ class TarefaController extends Controller
      */
     public function create()
     {
-        //
+        //Create de Tarefa
+        return view('tarefa.create');
     }
 
     /**
@@ -45,7 +49,26 @@ class TarefaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Criar as regras de tarefa
+        $request->validate([
+            'tarefa' => 'required|min:3|max:200',
+            'data_limite_conclusao' => 'required|date',
+        ], [
+            'tarefa.required' => 'O campo Tarefa é obrigatório',
+            'tarefa.min' => 'O campo Tarefa deve ter no mínimo 3 caracteres',
+            'tarefa.max' => 'O campo Tarefa deve ter no máximo 200 caracteres',
+            'data_limite_conclusao.required' => 'O campo Data limite conclusão é obrigatório',
+            'data_limite_conclusao.date' => 'O campo Data limite conclusão deve ser uma data válida',
+        ]);
+
+        $dados = $request->all('tarefa', 'data_limite_conclusao');
+        $dados['user_id'] = auth()->user()->id;
+
+        $tarefa = Tarefa::create($dados);
+        $destinatario = auth()->user()->email;
+        Mail::to($destinatario)->send(new NovaTarefaMail($tarefa));
+
+        return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id]);
     }
 
     /**
@@ -56,7 +79,8 @@ class TarefaController extends Controller
      */
     public function show(Tarefa $tarefa)
     {
-        //
+        //Criar método show
+        return view('tarefa.show', ['tarefa' => $tarefa]);
     }
 
     /**
