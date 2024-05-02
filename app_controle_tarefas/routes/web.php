@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('bem-vindo');
 });
 
 // Import the Auth class
@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes(['verify' => true]);
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
+Route::get('tarefa/exportacao/{extensao}', [TarefaController::class, 'exportacao'])->name('tarefa.exportacao')->middleware('verified');
+Route::get('tarefa/exportar', [TarefaController::class, 'exportar'])->name('tarefa.exportar')->middleware('verified');
 //Criar a Rota para Tarefa através do TarefaController
 Route::resource('tarefa', TarefaController::class)->middleware('verified');
 Route::get('/mensagem-teste', function () {

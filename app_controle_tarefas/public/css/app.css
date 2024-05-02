@@ -11965,4 +11965,7 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+  .float-right {
+    float: right;
+  }
 }
